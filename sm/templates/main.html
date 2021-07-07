@@ -1,0 +1,124 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    {%load static%}
+    <link rel="stylesheet" href="{%static 'css/form.css'%}">
+</head>
+
+<body>
+    <ul style="display: flex;justify-content: center;padding: 0;">
+        <div style="display: flex;justify-content: center;width: 100%;height: 2rem;">
+            <li style="color: black;" onclick="changeinsta()"><h3 style="margin: 0;cursor: pointer;">Insta Mate</h3></li>
+            <li style="color: black;" onclick="changefb()"><h3 style="margin: 0;cursor: pointer;">FB Mate</h3></li>
+        </div>
+    </ul>
+    <div class="container">
+            {%if pics or video%}
+                <div class="frame">
+                <h2 style="text-align: center;color: white;">Insta Mate</h2>
+                    <form class="form-insta" action="{%url 'get_insta'%}" method="post" name="form"  >
+                        {%csrf_token%}
+                        <label for="username" style="text-align: center;">Instagram(Video/Image/Reel/IG TV) URL</label>
+                        <input class="form-styling" type="url" name="url" placeholder="" required>
+                        <button class="btn-animate" style="cursor: pointer;" type="submit">Extract</button>
+                    </form>
+                </div>
+                <div class="element" style="text-align: center;
+                margin-top: 4rem;
+                display: flex;
+                align-content: center;
+                flex-wrap: wrap;
+                background: #383f66;
+                padding: 2rem;
+                margin: 2rem;
+                justify-content: center;
+                flex-direction: row;
+                border-radius: 8px;
+                box-shadow: 0px 0px 5px 0px black;
+                backdrop-filter: blur(1px);">
+                    {%if video%}
+                        {%for vid in video%}
+                        <div style="margin-right: 2rem;">
+                            <form action="/download/{{vid.0}}vid" method="POST">
+                                {%csrf_token%}
+                                <video controls width="300" height="300" src="{{vid.1}}" frameborder="0" controlsList="nodownload"></video>
+                                <input type="url" value="{{vid.2}}" name="{{vid.0}}videle" hidden>
+                                <button  type="submit" class="btn" style="cursor: pointer;
+                                position: relative;
+                                text-align: center;
+                                display: flex;
+                                margin: auto;
+                                padding: 0.6rem;
+                                background: #727dff;
+                                border: none;
+                                box-shadow: 0px 0px 5px 0px black;
+                                margin-top: 1rem;
+                                border-radius: 6px;"><i class="fa fa-download" style="margin-top: 4px;margin-right: 0.5rem;"></i>Download Video</button>
+                            </form>
+                        </div>
+                        {%endfor%}
+                    {%endif%}
+                    {%if pics%}
+                        {%for img in pics%}
+                        <div style="margin-right: 2rem;">
+                            <form action="/download/{{img.0}}img" method="POST">
+                                {%csrf_token%}
+                                <img width="200" height="200" src="{{img.1}}" frameborder="0"></img>
+                                <input type="url" value="{{img.2}}" name="{{img.0}}imgele" hidden>
+                                <button type="submit" class="btn" style=" cursor: pointer;
+                                position: relative;
+                                text-align: center;
+                                display: flex;
+                                margin: auto;
+                                padding: 0.6rem;
+                                background: #727dff;
+                                border: none;
+                                box-shadow: 0px 0px 5px 0px black;
+                                margin-top: 1rem;
+                                border-radius: 6px;"><i class="fa fa-download" style="margin-top: 4px;margin-right: 0.5rem;"></i>Download Image</button>
+                            </form>
+                        </div>
+                        {%endfor%}
+                    {%endif%}    
+                </div>
+            {%else%}
+                <div class="frame">
+                    <h2 style="text-align: center;color: white;">Insta Mate</h2>
+                    <form class="form-insta" action="{%url 'get_insta'%}" method="post" name="form" autocomplete="off" >
+                        {%csrf_token%}
+                        <label for="username" style="text-align: center;">Instagram(Video/Image/Reel/IG TV) URL</label>
+                        <input class="form-styling" type="url" name="url" placeholder="" required>
+                        <button class="btn-animate" style="cursor: pointer;" type="submit">Extract</button>
+                    </form>
+                </div>
+            {%endif%}<!--form-face-->
+    </div>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {% if messages %}
+        {% for m in messages %}
+        <script>
+            Swal.fire({
+                icon: 'success',
+                title: '{{m}}',
+            })
+        </script>
+        {% endfor %}
+    {% endif %}
+    {% if error %}
+    <script>
+        Swal.fire({
+            icon: 'success',
+            title: '{{error}}',
+        })
+    </script>
+    {% endif %}
+</body>
+
+
+</html>
